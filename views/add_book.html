@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sellitt - Köp och sälj studentlitteratur</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">Sellitt</span></div>
+            <ul class="nav-links">
+                <li><a href="#how-it-works">Hur det fungerar</a></li>
+                <li><a href="#footer">Kontakt</a></li>
+            </ul>
+            <button class="btn">Logga in</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h1>Ladda upp bokannons</h1>
+        </div>
+    </section>
+
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <form action="/save_book_ad" method="post"> 
+
+                <div class="form">
+                    <label for="title">Titel:</label>
+                    <input type="text" id="title" name="title" value="{{title}}">
+        
+                    <label for="content">Innehåll:</label>
+                    <textarea id="content" name="content" rows="10" cols="30">{{content}}</textarea>
+                </div>
+
+            <div class="cta"> 
+                <a href="/" class="btn">Startsida</a>
+                <button type="submit" class="btn">Spara artikel</button>
+            </div>
+            </form>
+        </div>
+    </section>
+
+    <footer class="footer" id="footer">
+        <div class="container">
+            <p>&copy; 2025 Sellitt. Alla rättigheter förbehållna.</p>
+        </div>
+    </footer>
+</body>
+</html>
