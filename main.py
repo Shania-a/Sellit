@@ -9,6 +9,9 @@ if not os.path.exists(save_folder): #kollar om mappen finns, om inte så skapas 
 
 #sparar böckerna i mappen book_ads, tar emot en titel och innehåll och sparar det i en textfil
 def save_file(title, content):
+    file = f"book_ads/{title}.txt"
+    with open(file, "w", encoding="utf-8") as f:
+        f.write(content)
         f.close()
     
 @route('/add_book_ad') 
