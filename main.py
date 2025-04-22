@@ -14,14 +14,14 @@ def save_file(title, content):
         f.write(content)
         f.close()
     
-@route('/add_book_ad') 
+@route('/route_add_book') 
 #detta är del 1 och efter detta läggs det till en till del som sparar boken. 
 #funkar inte just nu med bara detta och felkoderna visas fortfarande på html-filen.
 #behöver antagligen skriva fler funktioner innan det bröjar funka, funktioner som sparar filer etc
 #behöver också kolla om det är någon variabel som saknas i koden som gör att felkoderna visas i html
 
 def add_book_ad():
-    return template("add_book", title="", content="", error="")
+    return template("add_book", title="", content="")
 
 @route("/save_book_ad", method="POST")
 def save_book_ad():
