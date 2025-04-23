@@ -34,5 +34,8 @@ def index():
 def server_static(filename):
     return static_file(filename, root='static') 
 
+@route('/login')
+def login():
+    return template('login')
 
 run(host='localhost', port=8080, debug=True, reloader=True)
