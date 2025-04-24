@@ -14,17 +14,17 @@ def save_file(title, content):
         f.write(content)
         f.close()
     
-@route('/route_add_book') 
+@route('/route_add_book') #visar formuläret för att lägga till en bok
 def add_book_ad():
     return template("add_book", title="", content="")
 
-@route("/save_book_ad", method="POST")
+@route("/save_book_ad", method="POST") #sparar boken
 def save_book_ad():
     title = request.forms.get("title")
     content = request.forms.get("content")    
     
     save_file(title, content)
-    return redirect("/")
+    return template("uploaded_book_ad")
 
 @route('/') #startsida
 def index():
