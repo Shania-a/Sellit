@@ -33,6 +33,8 @@ body {
 .logo {
     font-size: 24px;
     font-weight: bold;
+    text-decoration: none;
+    color: white;
 }
 
 .logo span {
@@ -134,4 +136,35 @@ body {
     color: white;
     padding: 30px 0;
     text-align: center;
+}
+
+/* Kod för att göra bok-uppladnings-formuläret snyggare */
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+form label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+form input,
+form textarea {
+    width: 100%;
+    max-width: 500px;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+form textarea {
+    resize: vertical;
+    min-height: 150px;
 }
