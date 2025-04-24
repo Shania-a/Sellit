@@ -1,2 +1,21 @@
-# Sellit
- Grupp 4
+Sellitt
+
+Detta är en digital plattform för handel av begagnad kurslitteratur för studenter vid Malmö universitet.
+Länkar
+Kodrepository: https://github.com/Shania-a/Sellit 
+
+Förutsättningar
+Python
+PostgreSQL 
+Visual Studio Code
+
+Körning
+I VS Code kör
+python main.py
+
+Öppna sedan webbläsaren på http://localhost:8080
+
+Vid problem
+Ställ frågor i gruppens Discord-kanal
+
+
