@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8">
+  <title>Boklista</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/script.js" defer></script>
+</head>
+<body>
+  <h1>Tillgängliga böcker</h1>
+  % if books:
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Titel</th>
+          <th>Författare</th>
+          <th>År</th>
+          <th>ISBN</th>
+        </tr>
+      </thead>
+      <tbody>
+      % for b in books:
+        <tr>
+          <td>{{b['id']}}</td>
+          <td>{{b['title']}}</td>
+          <td>{{b['author']}}</td>
+          <td>{{b['publication_year']}}</td>
+          <td>{{b['isbn']}}</td>
+        </tr>
+      % end
+      </tbody>
+    </table>
+  % else:
+    <p>Inga böcker hittades.</p>
+  % end
+</body>
+</html>
