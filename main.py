@@ -1,14 +1,18 @@
 from bottle import route, run, template, static_file, request, redirect
 import os
 import psycopg2
+from dotenv import load_dotenv
 
 # --- DB‐anslutning ---
+# Ladda .env
+load_dotenv()
+
 DB = psycopg2.connect(
-    host="pgserver.mau.se",
-    dbname="aq2525",    # se till att det är rätt namn
-    user="aq2525",
-    password="b3dpasi8",
-    port=5432
+    host     = os.getenv('DB_HOST'),
+    dbname   = os.getenv('DB_NAME'),
+    user     = os.getenv('DB_USER'),
+    password = os.getenv('DB_PASSWORD'),
+    port     = os.getenv('DB_PORT')
 )
 
 @route('/book_list')
