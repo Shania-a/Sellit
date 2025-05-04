@@ -10,6 +10,7 @@ PostgreSQL
 Visual Studio Code
 
 Körning
+Skriv i terminal "pip install python-dotenv"
 I VS Code kör
 python main.py
 
