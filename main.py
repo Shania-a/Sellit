@@ -17,21 +17,29 @@ DB = psycopg2.connect(
 
 @route('/book_list')
 def book_list():
+    q = request.query.q or ""
     cur = DB.cursor()
-    cur.execute("""
-        SELECT id, title, author, publication_year, isbn
-          FROM public.books
-         ORDER BY title;
-    """)
+    if q:
+        sql = """
+            SELECT id, title, author, publication_year, isbn
+              FROM public.books
+             WHERE title ILIKE %s OR author ILIKE %s
+             ORDER BY title;
+        """
+        pattern = f'%{q}%'
+        cur.execute(sql, (pattern, pattern))
+    else:
+        cur.execute("""
+            SELECT id, title, author, publication_year, isbn
+              FROM public.books
+             ORDER BY title;
+        """)
     rows = cur.fetchall()
-    # hämta kolumnnamnen
-    cols = [desc[0] for desc in cur.description]
+    cols = [d[0] for d in cur.description]
     cur.close()
 
-    # konvertera varje rad till dict, t.ex. {'id':1,'title':'Learn Python',...}
-    books = [ dict(zip(cols, row)) for row in rows ]
-
-    return template('book_list', books=books)
+    books = [dict(zip(cols, row)) for row in rows]
+    return template('book_list', books=books, q=q)
 
 # --- resterande routes, funktionen save_file osv. oförändrade ---
 save_folder = "book_ads"
@@ -42,6 +50,7 @@ def save_file(title, content):
     path = f"{save_folder}/{title}.txt"
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
+
 
 @route('/route_add_book')
 def add_book_ad():

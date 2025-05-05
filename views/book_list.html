@@ -1,36 +1,46 @@
-<!DOCTYPE html>
-<html lang="sv">
-<head>
-  <meta charset="utf-8">
-  <title>Boklista</title>
-  <link rel="stylesheet" href="/static/style.css">
-  <script src="/static/script.js" defer></script>
-</head>
-<body>
-  <h1>Tillgängliga böcker</h1>
-  % if books:
-    <table>
-      <thead>
-        <tr>
-          <th>Titel</th>
-          <th>Författare</th>
-          <th>År</th>
-          <th>ISBN</th>
-        </tr>
-      </thead>
-      <tbody>
-      % for b in books:
-        <tr>
-          <td>{{b['title']}}</td>
-          <td>{{b['author']}}</td>
-          <td>{{b['publication_year']}}</td>
-          <td>{{b['isbn']}}</td>
-        </tr>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Boklista – Sellitt</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="/static/script.js" defer></script>
+  </head>
+  <body>
+    <!-- Fixed navbar -->
+    <nav class="navbar">
+      <a href="/" class="brand">Sellitt</a>
+      <form method="get" action="/book_list" class="search-form">
+        <input
+          type="text"
+          name="q"
+          placeholder="Sök titel eller författare…"
+          value="{{! q }}">
+        <button type="submit">🔍</button>
+      </form>
+    </nav>
+
+    <!-- Huvud-innehåll med padding-top för att inte hamna under navbaren -->
+    <div class="main-content">
+      <h1>Böcker</h1>
+
+      <!-- Eventuellt “visa alla”-länk -->
+      % if q:
+        <p><a href="/book_list">&larr; Visa alla</a></p>
       % end
-      </tbody>
-    </table>
-  % else:
-    <p>Inga böcker hittades.</p>
-  % end
-</body>
+
+      <!-- Listan -->
+      <ul class="book-list">
+        % for book in books:
+          <li>
+            <div class="book-details">
+              <div class="book-title">{{! book['title'] }}</div>
+              <div class="book-author">av {{! book['author'] }}</div>
+              <div class="book-year">{{! book['publication_year'] }}</div>
+            </div>
+          </li>
+        % end
+      </ul>      
+    </div>
+  </body>
 </html>
