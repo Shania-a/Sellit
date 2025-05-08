@@ -230,7 +230,7 @@ nav.navbar form.search-form button:hover {
   padding-bottom: 40px;
 }
 
-/* Grid-layou för böckerna */
+/* Grid-layout för böckerna */
 .book-list {
   list-style: none;
   display: grid;
@@ -267,6 +267,46 @@ nav.navbar form.search-form button:hover {
   color: #60646c;
   margin-bottom: 0.25rem;
 }
+
+/* css för guide.html (hitta böcker sidan) */
+
+.container_guide {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.hero-guide {
+    background-color: #f33b3b;
+    color: white;
+    padding: 60px 0 40px;
+    text-align: center;
+    margin-top: 60px;
+}
+
+.large-step {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 480px;
+  margin: 15px auto;
+  text-align: center;
+}
+
+.large-step h3 {
+  margin-bottom: 10px;
+  font-size: 1.4rem;
+}
+
+.large-step p {
+  font-size: 1rem;
+  color: #555;
+}
+
+
 
 /* Mobilanpassning */
 @media (max-width: 600px) {
