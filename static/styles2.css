@@ -23,7 +23,7 @@ body {
 .navbar {
     background-color: #f33b3b;
     padding: 15px 0;
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 .navbar .container {
