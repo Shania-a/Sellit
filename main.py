@@ -51,7 +51,6 @@ def save_file(title, content):
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
 
-
 @route('/route_add_book')
 def add_book_ad():
     return template("add_book", title="", content="")
@@ -62,6 +61,10 @@ def save_book_ad():
     content = request.forms.get("content")
     save_file(title, content)
     return template("uploaded_book_ad")
+
+@route('/guide')
+def guide():
+    return template('guide')
 
 @route('/')
 def index():
