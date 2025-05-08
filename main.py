@@ -55,12 +55,22 @@ def save_file(title, content):
 def add_book_ad():
     return template("add_book", title="", content="")
 
-@route("/save_book_ad", method="POST")
-def save_book_ad():
-    title = request.forms.get("title")
-    content = request.forms.get("content")
-    save_file(title, content)
-    return template("uploaded_book_ad")
+@route('/save_book', method='POST')
+def save_book():
+    title = request.forms.title
+    author = request.forms.author
+    year = request.forms.publication_year
+    isbn = request.forms.isbn
+
+    cur = DB.cursor()
+    cur.execute("""
+        INSERT INTO public.books (title, author, publication_year, isbn)
+        VALUES (%s, %s, %s, %s);
+    """, (title, author, year, isbn))
+    DB.commit()
+    cur.close()
+
+    redirect('/book_list')
 
 @route('/guide')
 def guide():

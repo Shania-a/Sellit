@@ -3,6 +3,7 @@
                         Detta är sidan för att läggatill böcker
  -->
 <html lang="sv">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +11,7 @@
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/script.js" defer></script>
 </head>
+
 <body>
     <nav class="navbar">
         <div class="container">
@@ -24,26 +26,36 @@
 
     <section class="hero">
         <div class="container">
-            <h1>Ladda upp bokannons</h1> 
+            <h1>Ladda upp bokannons</h1>
         </div>
     </section>
 
     <section class="how-it-works" id="how-it-works">
         <div class="container">
-            <form action="/save_book_ad" method="post"> 
-
-                <div class="form">
+            <form action="/save_book" method="post">
+                <div>
                     <label for="title">Titel:</label>
-                    <input type="text" id="title" name="title" value="{{title}}">
-        
-                    <label for="content">Innehåll:</label>
-                    <textarea id="content" name="content" rows="10" cols="30">{{content}}</textarea>
+                    <input type="text" id="title" name="title" required>
                 </div>
 
-            <div class="cta"> 
-                <a href="/" class="btn">Startsida</a>
-                <button type="submit" class="btn">Spara artikel</button>
-            </div>
+                <div>
+                    <label for="author">Författare:</label>
+                    <input type="text" id="author" name="author" required>
+                </div>
+
+                <div>
+                    <label for="publication_year">Utgivningsår:</label>
+                    <input type="number" id="publication_year" name="publication_year" min="0" max="9999" required>
+                </div>
+
+                <div>
+                    <label for="isbn">ISBN:</label>
+                    <input type="text" id="isbn" name="isbn" required>
+                </div>
+
+                <div>
+                    <button type="submit">Spara bok</button>
+                </div>
             </form>
         </div>
     </section>
@@ -54,4 +66,5 @@
         </div>
     </footer>
 </body>
+
 </html>
