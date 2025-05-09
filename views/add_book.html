@@ -17,7 +17,7 @@
         <div class="container">
             <a href="/" class="logo">Sellitt</a>
             <ul class="nav-links">
-                <li><a href="#">Hur det fungerar</a></li>
+                <li><a href="Guide">Hur det fungerar</a></li>
                 <li><a href="#">Kontakt</a></li>
             </ul>
             <button class="btn">Logga in</button>
@@ -29,9 +29,11 @@
             <h1>Ladda upp bokannons</h1>
         </div>
     </section>
+    
 
     <section class="how-it-works" id="how-it-works">
-        <div class="container">
+        <div class="upload-wrapper"> <!-- Wrappern för formuläret och bilden -->
+            <img src="/static/uppladdad_bok.png" alt="student som håller en bok" class="img_uploaded_book">
             <form action="/save_book" method="post">
                 <div>
                     <label for="title">Titel:</label>

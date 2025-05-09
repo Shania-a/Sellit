@@ -144,6 +144,7 @@ body {
 form {
     display: flex;
     flex-direction: column;
+    flex: 1;
     align-items: center;
     gap: 1.5rem;
     margin-top: 2rem;
@@ -169,6 +170,28 @@ form textarea {
     resize: vertical;
     min-height: 150px;
 }
+
+.upload-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.img_uploaded_book {
+  max-width: 500px;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+}
+
 /* Enkel reset för listor etc */
 body, ul { margin: 0; padding: 0; }
 body {
