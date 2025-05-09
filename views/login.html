@@ -3,44 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logga in - Sellitt</title>
+    <title>Sellitt - Köp och sälj studentlitteratur</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="container">
-            <a href="/" class="logo">Sellitt</a>
+            <div class="logo">Sell<span>It</span></div>
             <ul class="nav-links">
-                <li><a href="guide">Hur det fungerar</a></li>
+                <li><a href="#">Hur det fungerar</a></li>  <!-- har inte satt in detta än -->
                 <li><a href="#">Kontakt</a></li>
             </ul>
+            <!-- Länk för att öppna popupen -->
             <a href="/login" class="btn">Logga in</a>
         </div>
     </nav>
 
-    <main class="main-content">
-        <div class="container">
-            <h1 style="text-align: center; margin-bottom: 2rem;">Logga in på Sellitt</h1>
-            <form action="/login" method="post">
-                <div style="width: 100%; max-width: 500px;">
-                    <label for="username">Användarnamn</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-                <div style="width: 100%; max-width: 500px;">
-                    <label for="password">Lösenord</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <button type="submit" class="btn">Logga in</button>
-            </form>
-            <div style="text-align: center; margin-top: 1.5rem;">
-                <p>Har du inget konto? <a href="/register">Skapa ett här</a></p>
+    <div class="popup-container">
+        <div class="popup-content">
+            <h2>Logga in eller Registrera</h2>
+
+            <!-- Loggain-->
+            <div class="popup-form">
+                <h3>Logga in</h3>
+                <form action="/login" method="POST">
+                    <label for="username">Användarnamn:</label>
+                    <input type="text" id="username" name="username" required><br>
+                    <label for="password">Lösenord:</label>
+                    <input type="password" id="password" name="password" required><br>
+                    <button type="submit" class="btn">Logga in</button>
+                </form>
+            </div>
+
+            <!-- Registrera -->
+            <div class="popup-form">
+                <h3>Registrera</h3>
+                <form action="/register" method="POST">
+                    <label for="username">Användarnamn:</label>
+                    <input type="text" id="username" name="username" required><br>
+                    <label for="password">Lösenord:</label>
+                    <input type="password" id="password" name="password" required><br>
+                    <button type="submit" class="btn">Registrera</button>
+                </form>
             </div>
         </div>
-    </main>
+    </div>
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 Sellitt. Alla rättigheter förbehållna.</p>
+            <p>&copy; 2025 SellIt. Alla rättigheter förbehållna.</p>
         </div>
     </footer>
 </body>

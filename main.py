@@ -1,5 +1,6 @@
 from bottle import route, run, template, static_file, request, redirect
 import os
+import json #la til denna för tillfället för login och registrering, men kan ta bort när vi sparar det i databasen i stället
 import psycopg2
 from dotenv import load_dotenv
 
@@ -62,15 +63,66 @@ def index():
 def server_static(filename):
     return static_file(filename, root='static')
 
-@route('/login', method=['GET', 'POST'])
+
+#Den som läser från JSON-fil
+def read_users():
+    if os.path.exists('users.json'):
+        with open('users.json', 'r') as file:
+            return json.load(file)
+    return {'users': []}
+
+#sparar användardatan
+def save_users(data):
+    with open('users.json', 'w') as file:
+        json.dump(data, file)
+
+@route('/login', method=['GET', 'POST']) #Ni fattar att det är en route för login, vat inte vad jag ska kommentera på allt
 def login():
-    if request.method == 'POST':  # Logiken för att hantera login
-        pass  # Här skulle du lägga till logik för att validera användaren
-    return template('views/login.html')  # Om du har login.html i en mapp som heter 'views'
+    if request.method == 'POST':
+        username = request.forms.get('username')
+        password = request.forms.get('password')
+
+        # Läser användardatan från JSON-fil
+        users_data = read_users()
+
+        # Hittar användaren
+        user = next((user for user in users_data['users'] if user['username'] == username), None)
+
+        # Kontrollera om användaren finns och lösenordet stämmer
+        if user and user['password'] == password:
+            return template('login_success.html', username=username)
+        else:
+            return template('login_failed.html')
 
 
+    return template('login_register_popup.html')
 
 
+@route('/register', method=['GET', 'POST']) 
+def register():
+    if request.method == 'POST':
+        username = request.forms.get('username')
+        password = request.forms.get('password')
 
-if __name__ == '__main__':
-    run(host='localhost', port=8080, debug=True, reloader=True)
+        # Läser användardata från JSON-filen
+        users_data = read_users()
+
+        #kollar om användaren redan finns
+        if any(user['username'] == username for user in users_data['users']):
+            return template('register_failed.html', error="Användarnamnet är redan upptaget.")
+
+        #Lägger till den nya användaren
+        users_data['users'].append({
+            'username': username,
+            'password': password
+        })
+
+        save_users(users_data)
+
+        return redirect('/login')
+
+    return template('login_register_popup.html')
+
+@route('/static/<filename>')
+def server_static(filename):
+    return static_file(filename, root='static')
