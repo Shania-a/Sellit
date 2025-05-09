@@ -62,9 +62,15 @@ def index():
 def server_static(filename):
     return static_file(filename, root='static')
 
-@route('/login')
+@route('/login', method=['GET', 'POST'])
 def login():
-    return template('login')
+    if request.method == 'POST':  # Logiken för att hantera login
+        pass  # Här skulle du lägga till logik för att validera användaren
+    return template('views/login.html')  # Om du har login.html i en mapp som heter 'views'
+
+
+
+
 
 if __name__ == '__main__':
     run(host='localhost', port=8080, debug=True, reloader=True)
