@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logga in - Sellitt</title>
+    <title>Registrering misslyckades - Sellitt</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
@@ -19,15 +19,9 @@
     </nav>
 
     <div class="main-content">
-        <h2>Logga in</h2>
-        <form action="/login" method="POST">
-            <label for="username">Användarnamn:</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password">Lösenord:</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit" class="btn">Logga in</button>
-        </form>
-        <p>Har du inget konto? <a href="/register">Registrera dig</a></p>
+        <h2>Registrering misslyckades</h2>
+        <p>{{error}}</p>
+        <a href="/register" class="btn">Försök igen</a>
     </div>
 
     <footer class="footer">

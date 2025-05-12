@@ -1,10 +1,25 @@
-/* Sidan till login, fråga mig om det är något /Nikita */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 .main-content {
+    flex: 1 0 auto;
     padding-top: 100px;
     padding-bottom: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+body > *:not(.navbar):not(.footer) {
+    flex: 1 0 auto; 
 }
 
 form {
@@ -19,14 +34,14 @@ form {
     border-radius: 10px;
     box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.05);
 }
-  
+
 form label {
     font-weight: bold;
     margin-bottom: 0.3rem;
     display: block;
     width: 100%;
 }
-  
+
 form input[type="text"], form input[type="password"] {
     width: 100%;
     padding: 12px;
@@ -34,7 +49,7 @@ form input[type="text"], form input[type="password"] {
     border: 1px solid #ccc;
     font-size: 1rem;
 }
-  
+
 form button.btn {
     width: 100%;
     padding: 12px;
@@ -45,18 +60,25 @@ form button.btn {
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
-  
+
 form button.btn:hover {
     background-color: #ff5e5e;
 }
-  
+
 .main-content p a {
     color: #f33b3b;
     text-decoration: none;
     font-weight: bold;
 }
-  
+
 .main-content p a:hover {
     text-decoration: underline;
 }
-  
+
+/* Sticky footer */
+.footer {
+    flex-shrink: 0; /* Förhindrar att footern krymper */
+    background-color: #f8f8f8; /* Anpassa efter din befintliga styling */
+    text-align: center;
+    padding: 1rem 0;
+}
