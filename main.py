@@ -27,26 +27,26 @@ def save_file(title, content):
 @route('/book_list')
 def book_list():
     """
-    Funktion: Visar boklistan med möjlighet att söka (q) och filtrera på kurs och program.
-    Ursprungligen kunde man söka efter titel/författare men denna version bygger vidare på det
-    och gör det möjligt att kombinera flera filter samtidigt.
+    Visar en lista med böcker från databasen. Användaren kan:
+      - Söka på titel eller författare (parameter: q)
+      - Filtrera på kursnamn (parameter: course)
+      - Filtrera på programnamn (parameter: program)
 
-    Alla filtreringsval hanteras genom att bygga upp sql-frågan stegvis. Vi börjar med en
-    generell WHERE 1=1 och lägger till villkor med AND för varje ifyllt fält. Sökningen och
-    filtreringen fungerar på samma sätt, båda omvandlas till SQL med ILIKE så de kan kombineras.
-
-    Jag tänker att nästa steg är att lägga in testdata för ett par program och tillhörande kurser
-    för att kunna testa filtreringen bättre i praktiken. Detta kan sedan byggas ut till riktiga dropdown-menyer
-    eller kopplas till kursdata från webbscraping.
+    Funktionen gör tre saker:
+    - Hämtar filtrerningsparametrar från URLL:en (det som användaren har matat in) 
+    - Bygger en sql-fråga baserat på vilka filter som är ifyllda 
+    - kör frågan, behandlar resultatet och skickar det till html-mallen   
     """
-    # Hämtar sökfras och filtreringsparametrar från URL:en
+    # Hämtar sökfras och filtreringsparametrar från URL:en, tar bort blanktecken
     q = request.query.q.strip() if request.query.q else ""
     course = request.query.course.strip() if request.query.course else ""
     program = request.query.program.strip() if request.query.program else ""
 
     try:
         cur = DB.cursor()
-
+        
+        # Bas-SQL: Hämta info om alla böcker, inklusive relaterad kurs och program (om det finns).
+        # LEFT JOIN används för att även visa böcker som inte har någon koppling till kurs/program.
         sql = """
             select distinct b.id, b.title, b.author, b.publication_year, b.isbn
             from books b
@@ -56,19 +56,17 @@ def book_list():
             left join programs p on pc.program_id = p.id
             where 1=1
         """
-        # lista med parametrar som ska skickas till sql-frågan
+        # Förbereder en lista som ska innehålla alla värden som skickas till SQL-frågan
         params = []
 
-        # om användaren har skrivit något i sökfältet
-        # så läggs det till i sql-frågan
+        # om användaren har skrivit något i sökfältet så läggs det till i sql-frågan
         # ILIKE används istället för LIKE för att matchningen ska vara skiftlägesoberoende
         if q:
             sql += " and (b.title ILIKE %s or b.author ILIKE %s)"
             like_q = f"%{q}%"
             params.extend([like_q, like_q])
 
-        # om användaren har valt kurs eller program
-        # så läggs det till i sql-frågan
+        # om användaren angett kurs så läggs det till i sql-frågan
         if course:  
             sql += " and c.name ILIKE %s"
             params.append(f"%{course}%")
