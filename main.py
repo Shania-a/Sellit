@@ -54,16 +54,25 @@ def save_book_ad():
 def index():
     return template('index')
 
-# --- Användarhantering ---
+#login
 def read_users():
     if os.path.exists('users.json'):
         with open('users.json', 'r') as file:
-            return json.load(file)
+            try:
+                return json.load(file)
+            except json.JSONDecodeError:
+                # Återställ till tom lista om filen är trasig eller tom
+                return {'users': []}
     return {'users': []}
 
+
 def save_users(data):
-    with open('users.json', 'w') as file:
-        json.dump(data, file)
+    try:
+        with open('users.json', 'w') as file:
+            json.dump(data, file)
+        print("✔ users.json sparad!")
+    except Exception as e:
+        print("❌ Kunde inte spara users.json:", e)
 
 @route('/login', method=['GET', 'POST'])
 def login():
