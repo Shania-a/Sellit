@@ -130,5 +130,9 @@ def server_static(filename):
 def login():
     return template('login')
 
+@route('/contact')
+def contact():
+    return template('contact')
+
 if __name__ == '__main__':
     run(host='localhost', port=8080, debug=True, reloader=True)
