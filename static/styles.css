@@ -57,7 +57,7 @@ body {
 }
 
 .nav-links a:hover {
-    color: #60646c;
+    color: #f33b3b;
 }
 .hero {
     background-color: #f33b3b;
@@ -132,7 +132,7 @@ body {
     margin-top: 40px;
 }
 .footer {
-    background-color: #60646c;
+    background-color: #f33b3b;
     color: white;
     padding: 30px 0;
     text-align: center;
