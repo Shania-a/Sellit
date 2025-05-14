@@ -1,6 +1,7 @@
 from bottle import route, run, template, static_file, request, redirect
 import os
 import psycopg2
+import json
 from dotenv import load_dotenv
 
 # --- DB‐anslutning ---
@@ -126,13 +127,62 @@ def index():
 def server_static(filename):
     return static_file(filename, root='static')
 
-@route('/login')
-def login():
-    return template('login')
-
 @route('/contact')
 def contact():
     return template('contact')
+
+#login
+def read_users():
+    if os.path.exists('users.json'):
+        with open('users.json', 'r') as file:
+            try:
+                return json.load(file)
+            except json.JSONDecodeError:
+                # Återställ till tom lista om filen är trasig eller tom
+                return {'users': []}
+    return {'users': []}
+
+
+def save_users(data):
+    try:
+        with open('users.json', 'w') as file:
+            json.dump(data, file)
+        print("✔ users.json sparad!")
+    except Exception as e:
+        print("❌ Kunde inte spara users.json:", e)
+
+@route('/login', method=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.forms.get('username')
+        password = request.forms.get('password')
+        users_data = read_users()
+        user = next((user for user in users_data['users'] if user['username'] == username), None)
+        if user and user['password'] == password:
+            return template('login_success', username=username)
+        else:
+            return template('login_failed')
+    return template('login')
+
+@route('/register', method=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.forms.get('username')
+        password = request.forms.get('password')
+        users_data = read_users()
+        if any(user['username'] == username for user in users_data['users']):
+            return template('register_failed', error="Användarnamnet är redan upptaget.")
+        users_data['users'].append({
+            'username': username,
+            'password': password
+        })
+        save_users(users_data)
+        return redirect('/login')
+    return template('register')
+
+@route('/static/<filename>')
+def server_static(filename):
+    return static_file(filename, root='static')
 
 if __name__ == '__main__':
     run(host='localhost', port=8080, debug=True, reloader=True)
