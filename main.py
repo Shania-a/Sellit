@@ -49,7 +49,7 @@ def book_list():
         # Bas-SQL: Hämta info om alla böcker, inklusive relaterad kurs och program (om det finns).
         # LEFT JOIN används för att även visa böcker som inte har någon koppling till kurs/program.
         sql = """
-            select distinct b.id, b.title, b.author, b.publication_year, b.isbn
+            select distinct b.id, b.title, b.author, b.publication_year, b.isbn, a.price
             from books b
             left join ads a on b.id = a.book_id 
             left join courses c on a.course_id = c.id
