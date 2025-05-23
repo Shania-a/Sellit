@@ -1,8 +1,21 @@
 from bottle import route, run, template, static_file, request, redirect
+from bottle import Bottle
 import os
 import psycopg2
 import json
 from dotenv import load_dotenv
+from beaker.middleware import SessionMiddleware  #För session hantering för inloggningen
+
+session_opts = {  #Hör till beaker
+    'session.type': 'file',
+    'session.cookie_expires': 3000,
+    'session.data_dir': './data',
+    'session.auto': True
+}
+
+app = Bottle()
+
+
 
 # --- DB‐anslutning ---
 # Ladda .env
@@ -25,7 +38,7 @@ def save_file(title, content):
     with open(path, "w", encoding="utf-8") as f:
         f.write(content)
 
-@route('/book_list')
+@app.route('/book_list')
 def book_list():
     """
     Visar en lista med böcker från databasen. Användaren kan:
@@ -94,12 +107,17 @@ def book_list():
     
     return template('book_list', books=books, q=q, course=course, program=program)
 
-@route('/route_add_book')
+@app.route('/route_add_book')
 def add_book_ad():
     return template("add_book", title="", content="")
 
-@route('/save_book', method='POST')
+@app.route('/save_book', method='POST')
 def save_book():
+    s = request.environ.get('beaker.session')
+    username = s.get('user', None)
+    if not username:
+        redirect('/login')
+
     title = request.forms.title
     author = request.forms.author
     year = request.forms.publication_year
@@ -107,28 +125,41 @@ def save_book():
     price = request.forms.price
 
     cur = DB.cursor()
+    # Lägg till en kolumn `username` i ads-tabellen om du inte redan har det
     cur.execute("""
         INSERT INTO public.books (title, author, publication_year, isbn)
-        VALUES (%s, %s, %s, %s);
+        VALUES (%s, %s, %s, %s)
+        RETURNING id;
     """, (title, author, year, isbn))
+    book_id = cur.fetchone()[0]
+
+    cur.execute("""
+        INSERT INTO ads (book_id, username, price)
+        VALUES (%s, %s, %s);
+    """, (book_id, username, price))
+
     DB.commit()
     cur.close()
 
     redirect('/book_list')
 
-@route('/guide')
+
+@app.route('/guide')
 def guide():
     return template('guide')
 
-@route('/')
+@app.route('/')  #Ändrade denna för att den ska funka med de olika sessionerna
 def index():
-    return template('index')
+    s = request.environ.get('beaker.session')
+    username = s.get('user', None)
+    return template('index', username=username)
 
-@route('/static/<filename>')
+
+@app.route('/static/<filename>')
 def server_static(filename):
     return static_file(filename, root='static')
 
-@route('/contact')
+@app.route('/contact')
 def contact():
     return template('contact')
 
@@ -152,20 +183,26 @@ def save_users(data):
     except Exception as e:
         print("❌ Kunde inte spara users.json:", e)
 
-@route('/login', method=['GET', 'POST'])
+from bottle import request, response
+
+@app.route('/login', method=['GET', 'POST'])
 def login():
+    s = request.environ.get('beaker.session')
     if request.method == 'POST':
         username = request.forms.get('username')
         password = request.forms.get('password')
         users_data = read_users()
         user = next((user for user in users_data['users'] if user['username'] == username), None)
         if user and user['password'] == password:
-            return template('login_success', username=username)
+            s['user'] = username
+            s.save()
+            redirect('/')
         else:
             return template('login_failed')
     return template('login')
 
-@route('/register', method=['GET', 'POST'])
+
+@app.route('/register', method=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.forms.get('username')
@@ -181,9 +218,26 @@ def register():
         return redirect('/login')
     return template('register')
 
-@route('/static/<filename>')
+@app.route('/static/<filename>')
 def server_static(filename):
     return static_file(filename, root='static')
 
+@app.route('/logout')
+def logout():
+    s = request.environ.get('beaker.session')
+    s.delete()
+    redirect('/')
+    
+@app.route('/route_add_book') #En route för att lägga till böckerna MEN det är ssparat i sessions för profilen
+def add_book_ad():
+    s = request.environ.get('beaker.session')
+    username = s.get('user', None)
+    return template("add_book", username=username)
+
+    
+
+wrapped_app = SessionMiddleware(app, session_opts)
+
 if __name__ == '__main__':
-    run(host='localhost', port=8080, debug=True, reloader=True)
+    run(app=wrapped_app, host='localhost', port=8080, debug=True, reloader=True)
+
