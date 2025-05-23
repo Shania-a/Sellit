@@ -28,15 +28,6 @@ DB = psycopg2.connect(
     password = os.getenv('DB_PASSWORD'),
     port     = os.getenv('DB_PORT')
 )
- #Tror vi kan ta bort den här och save_file som är under nu när vi har databas
-save_folder = "book_ads"
-if not os.path.exists(save_folder):
-    os.makedirs(save_folder)
-
-def save_file(title, content):
-    path = f"{save_folder}/{title}.txt"
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(content)
 
 @app.route('/book_list')
 def book_list():
@@ -62,7 +53,7 @@ def book_list():
         # Bas-SQL: Hämta info om alla böcker, inklusive relaterad kurs och program (om det finns).
         # LEFT JOIN används för att även visa böcker som inte har någon koppling till kurs/program.
         sql = """
-            select distinct b.id, b.title, b.author, b.publication_year, b.isbn
+            select distinct b.id, b.title, b.author, b.publication_year, b.isbn, a.price
             from books b
             left join ads a on b.id = a.book_id 
             left join courses c on a.course_id = c.id
@@ -70,6 +61,7 @@ def book_list():
             left join programs p on pc.program_id = p.id
             where 1=1
         """
+
         # Förbereder en lista som ska innehålla alla värden som skickas till SQL-frågan
         params = []
 
@@ -125,7 +117,7 @@ def save_book():
     price = request.forms.price
 
     cur = DB.cursor()
-    # Lägg till en kolumn `username` i ads-tabellen om du inte redan har det
+    
     cur.execute("""
         INSERT INTO public.books (title, author, publication_year, isbn)
         VALUES (%s, %s, %s, %s)
