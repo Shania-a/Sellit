@@ -123,17 +123,21 @@ body {
 }
 
 .step {
-    background: white;
+    background:#FDF4EE;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     width: 300px;
 }
 
-.step-icon {
-    font-size: 40px;
-    margin-bottom: 10px;
+.step-icon img{
+    width: 90px;
+    height: 90px;
+    object-fit: contain; /* bevarar proportioner */
+    display: block;
+    margin: 0 auto 10px auto; /* centrerar ikonen och ger lite mellanrum nedåt */
 }
+
 
 .cta {
     margin-top: 40px;
