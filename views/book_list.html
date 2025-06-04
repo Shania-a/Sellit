@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Boklista – Sellitt</title>
+    <title>Boklista - Sellitt</title>
     <link rel="stylesheet" href="/static/styles.css">
     <script src="/static/script.js" defer></script>
   </head>
@@ -16,33 +16,48 @@
           name="q"
           placeholder="Sök titel eller författare…"
           value="{{! q }}">
-        <button type="submit">🔍</button>
+          <button type="submit">Sök</button>
       </form>
     </nav>
 
     <!-- Huvud-innehåll med padding-top för att inte hamna under navbaren -->
+    <h1>Böcker</h1>
+
     <div class="main-content">
-      <h1>Böcker</h1>
+    
+      <!-- vänstersidan filtreringsbar-->
+      <aside class="filtrering-sidebar">
+        <form method="get" action="/book_list" class="filtrerings-form">
+          <h2>Filtrera</h2>
 
-      <!-- Eventuellt “visa alla”-länk -->
-      % if q:
-        <p><a href="/book_list">&larr; Visa alla</a></p>
-      % end
+          <input type="text" name="course" placeholder="Kursnamn" value="{{ course }}">
 
-      <!-- Listan -->
-      <ul class="book-list">
-        % for book in books:
-          <li>
-            <div class="book-details">
-              <div class="book-title">{{! book['title'] }}</div>
-              <div class="book-author">Författare: {{! book['author'] }}</div>
-              <div class="book-isbn">ISBN: {{! book['isbn'] }}</div>
-              <div class="book-year">Publikationsår: {{! book['publication_year'] }}</div>
-              <div class="book-price">Pris: {{! book['price'] }} kr</div>
-            </div>
-          </li>
+          <button type="submit">Filtrera</button>
+        </form>
+      </aside>
+
+
+      <!-- högersidan visar böcker-->
+      <section class="book-results">
+        <!-- om man står i vyn från sökresultat/filter visas denna för att komma tillbaka -->
+        % if q or course:
+          <p><a href="/book_list">&larr; Rensa filter</a></p>
         % end
-      </ul>      
+      
+        <ul class="book-list">
+          % for book in books:
+            <li>
+              <div class="book-details">
+                <div class="book-title">{{! book['title'] }}</div>
+                <div class="book-author">Författare: {{! book['author'] }}</div>
+                <div class="book-isbn">ISBN: {{! book['isbn'] }}</div>
+                <div class="book-year">Publikationsår: {{! book['publication_year'] }}</div>
+                <div class="book-price">Pris: {{! book['price'] }} kr</div>
+              </div>
+            </li>
+          % end
+        </ul>
+      </section>
     </div>
   </body>
 </html>

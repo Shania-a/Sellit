@@ -15,8 +15,6 @@ session_opts = {  #Hör till beaker
 
 app = Bottle()
 
-
-
 # --- DB‐anslutning ---
 # Ladda .env
 load_dotenv()
@@ -38,7 +36,7 @@ def book_list():
       - Filtrera på programnamn (parameter: program)
 
     Funktionen gör tre saker:
-    - Hämtar filtrerningsparametrar från URLL:en (det som användaren har matat in) 
+    - Hämtar filtrerningsparametrar från URL:en (det som användaren har matat in) 
     - Bygger en sql-fråga baserat på vilka filter som är ifyllda 
     - kör frågan, behandlar resultatet och skickar det till html-mallen   
     """
@@ -101,7 +99,15 @@ def book_list():
 
 @app.route('/route_add_book')
 def add_book_ad():
-    return template("add_book", title="", content="")
+    s = request.environ.get('beaker.session')
+    username = s.get('user', None)
+
+    cur = DB.cursor()
+    cur.execute('select id, name from courses order by name')  
+    courses = cur.fetchall()
+    cur.close()
+
+    return template("add_book", title="", content="", username=username, courses=courses)
 
 @app.route('/save_book', method='POST')
 def save_book():
@@ -110,28 +116,34 @@ def save_book():
     if not username:
         redirect('/login')
 
-    title = request.forms.title
-    author = request.forms.author
-    year = request.forms.publication_year
-    isbn = request.forms.isbn
-    price = request.forms.price
+    title = request.forms.get('title')
+    author = request.forms.get('author')
+    year = request.forms.get('publication_year')
+    isbn = request.forms.get('isbn')
+    price = request.forms.get('price')
+    course_id = request.forms.get('course_id') or None
 
-    cur = DB.cursor()
+    try: 
+        cur = DB.cursor()
     
-    cur.execute("""
-        INSERT INTO public.books (title, author, publication_year, isbn)
-        VALUES (%s, %s, %s, %s)
-        RETURNING id;
-    """, (title, author, year, isbn))
-    book_id = cur.fetchone()[0]
+        cur.execute("""
+            INSERT INTO public.books (title, author, publication_year, isbn)
+            VALUES (%s, %s, %s, %s)
+            RETURNING id;
+        """, (title, author, year, isbn))
+        book_id = cur.fetchone()[0]
+        # Sparar annons i ads-tabellen, med koppling till kurs om vald
+        cur.execute("""
+            INSERT INTO ads (book_id, username, price, course_id)
+            VALUES (%s, %s, %s, %s);
+        """, (book_id, username, price, course_id))
 
-    cur.execute("""
-        INSERT INTO ads (book_id, username, price)
-        VALUES (%s, %s, %s);
-    """, (book_id, username, price))
+        DB.commit()
+        cur.close()
 
-    DB.commit()
-    cur.close()
+    except Exception as e:
+        print("Ett fel uppstod när boken skulle sparas")
+        DB.rollback()
 
     redirect('/book_list')
 
@@ -171,9 +183,9 @@ def save_users(data):
     try:
         with open('users.json', 'w') as file:
             json.dump(data, file)
-        print("✔ users.json sparad!")
+        print("users.json sparad!")
     except Exception as e:
-        print("❌ Kunde inte spara users.json:", e)
+        print("Kunde inte spara users.json:", e)
 
 from bottle import request, response
 
@@ -220,13 +232,20 @@ def logout():
     s.delete()
     redirect('/')
     
-@app.route('/route_add_book') #En route för att lägga till böckerna MEN det är ssparat i sessions för profilen
+#En route för att lägga till böckerna MEN det är sparat i sessions för profilen
+#Uppdatering 3 juni(Nellie): lagt till hämtning av courses och title/content för att undvika krash, när programmet körs körs bara denna vers av routen som är längst ner och inte den ovanför
+#tror denna route är överflödig nu (eftersom jag redigerat den ovan), men väntar med att ta bort
+@app.route('/route_add_book') 
 def add_book_ad():
     s = request.environ.get('beaker.session')
     username = s.get('user', None)
-    return template("add_book", username=username)
 
+    cur = DB.cursor()
+    cur.execute('select id, name from courses order by name')
+    courses = cur.fetchall()
+    cur.close()
     
+    return template("add_book", username=username, courses=courses, title="", content="")
 
 wrapped_app = SessionMiddleware(app, session_opts)
 

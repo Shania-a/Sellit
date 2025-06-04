@@ -151,13 +151,15 @@ body {
 
 /* Kod för att göra bok-uppladnings-formuläret snyggare */
 
+/*den här form påverkar mycket på sidan, sökformuläret + sökknappen, ladda upp bok sidan, logga in, registerera etc,
+tror det är pga denna som sök-knappen lägger sig under sökrutan*/
 form {
     display: flex;
     flex-direction: column;
     flex: 1;
     align-items: center;
     gap: 1.5rem;
-    margin-top: 2rem;
+    margin-top: 3rem;
 }
 
 form label {
@@ -261,6 +263,7 @@ nav.navbar form.search-form button:hover {
 .main-content {
   padding-top: 100px; /* Ger plats för navbar */
   padding-bottom: 40px;
+  text-align: center;
 }
 
 /* Grid-layout för böckerna */

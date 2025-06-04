@@ -65,9 +65,21 @@
                     <label for="price">Pris:</label>
                     <input type="number" id="price" name="price" step="0.01" required>
                 </div>
+
+                <div>
+                    <label for="course">Kurs: </label>
+                    <select id="course_id" name="course_id">
+                        <option value="">Kursnamn:</option>
+                        % for cid, cname in courses:
+                            <option value="{{!cid}}">{{!cname}}</option>
+                        % end
+                    </select>
+                </div>
+
                 <div>
                     <button type="submit">Publicera annons</button>
                 </div>
+                
             </form>
         </div>
     </section>
