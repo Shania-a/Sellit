@@ -10,7 +10,7 @@ PostgreSQL
 Visual Studio Code
 
 Körning
-Skriv i terminal "pip install python-dotenv"
+Skriv i terminal "pip install python-dotenv" och "pip install beaker"
 I VS Code kör
 python main.py
 
